@@ -85,6 +85,8 @@ RUN julia -e 'Pkg.init()' && \
 
 ## Add Haskell
 
+USER root
+
 # Add IHaskell kernel
 RUN apt-get update -qq && \
     apt-get install -yq --no-install-recommends \
@@ -104,6 +106,8 @@ RUN stack --install-ghc --resolver lts-9.20 install ghc-parser ipython-kernel ih
 ENV PATH=${PATH}:/home/jovyan/.local/bin:/home/jovyan/.stack/programs/x86_64-linux/ghc-8.0.2/bin/
 
 ## Add Ruby
+
+USER root
 
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends \
@@ -185,9 +189,6 @@ RUN jupyter-kernelspec install --user cling-cpp11
 
 WORKDIR $HOME
 
-# Switch back to jovyan to avoid accidental container runs as root
-USER $NB_USER
-
 ## Add Clojure
 
 ENV CLOJUPYTER_PATH $HOME/clojupyter
@@ -213,9 +214,6 @@ WORKDIR $CLOJUPYTER_PATH
 RUN make
 RUN make install
 
-# Switch back to jovyan to avoid accidental container runs as root
-USER $NB_USER
-
 ## Add JavaScript
 
 RUN apt-get update
@@ -223,6 +221,7 @@ RUN apt-get install -y curl
 RUN curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 RUN apt-get install -y nodejs libzmq3-dev build-essential && npm install -g ijavascript
 RUN ijs --ijs-install-kernel
+
 
 # Switch back to jovyan to avoid accidental container runs as root
 USER $NB_USER
