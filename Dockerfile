@@ -188,3 +188,42 @@ WORKDIR $HOME
 # Switch back to jovyan to avoid accidental container runs as root
 USER $NB_USER
 
+## Add Clojure
+
+ENV CLOJUPYTER_PATH $HOME/clojupyter
+ENV LEIN_ROOT=1
+
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0xb8d7f7791716c8a4
+RUN echo "deb http://ppa.launchpad.net/mikegedelman/leiningen-git-stable/ubuntu trusty main" >> /etc/apt/sources.list
+RUN echo "deb-src http://ppa.launchpad.net/mikegedelman/leiningen-git-stable/ubuntu trusty main" >> /etc/apt/sources.list
+
+RUN apt-get update && apt-get install -yq python-setuptools \
+        python-dev \
+        build-essential \
+        curl \
+        default-jre \
+        leiningen
+
+RUN lein self-install
+
+# Install clojupyter
+RUN mkdir $CLOJUPYTER_PATH
+COPY clojupyter $CLOJUPYTER_PATH
+WORKDIR $CLOJUPYTER_PATH
+RUN make
+RUN make install
+
+# Switch back to jovyan to avoid accidental container runs as root
+USER $NB_USER
+
+## Add JavaScript
+
+RUN apt-get update
+RUN apt-get install -y curl
+RUN curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+RUN apt-get install -y nodejs libzmq3-dev build-essential && npm install -g ijavascript
+RUN ijs --ijs-install-kernel
+
+# Switch back to jovyan to avoid accidental container runs as root
+USER $NB_USER
+
