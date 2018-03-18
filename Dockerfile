@@ -1,5 +1,7 @@
 FROM antergos/makepkg:latest
 
+LABEL maintainer="Mateusz Kubuszok <mateusz.kubuszok@gmail.com>"
+
 # basic preparations
 USER root
 RUN pacman -Sy --noconfirm yaourt && \
@@ -8,7 +10,7 @@ RUN pacman -Sy --noconfirm yaourt && \
 WORKDIR /tmp
 ENV NB_USER=jupyter
 
-# Jupyter lab
+# Jupyter Lab
 RUN sudo -u $NB_USER yaourt -Sy --noconfirm \
             ipython \
             ipython2 \
@@ -29,17 +31,16 @@ RUN sudo -u $NB_USER yaourt -Sy --noconfirm \
 # Haskell
 RUN sudo -u $NB_USER yaourt -Sy --noconfirm \
             cairo \
-            pango \
-            stack
-RUN sudo -u $NB_USER yaourt -Sy --noconfirm \
             ghc \
             happy \
-            haskell-gtk2hs-buildtools && \
+            haskell-gtk2hs-buildtools  \
+            pango \
+            stack && \
     git clone https://aur.archlinux.org/ihaskell-git.git /opt/ihaskell-git && \
     chown $NB_USER /opt/ihaskell-git -R && \
     cd /opt/ihaskell-git && \
-    sudo -u $NB_USER makepkg
-RUN sudo -u $NB_USER /home/$NB_USER/.local/bin/ihaskell --install stack
+    sudo -u $NB_USER makepkg && \
+    sudo -u $NB_USER /home/$NB_USER/.local/bin/ihaskell --install stack
 
 # Java and Clojure
 RUN sudo -u $NB_USER yaourt -Sy --noconfirm \
@@ -55,8 +56,7 @@ RUN sudo -u $NB_USER yaourt -Sy --noconfirm \
     rm /tmp/clojupyter -rf
 
 # JavaScript
-RUN cd /home/$NB_USER && \
-    sudo -u $NB_USER yaourt -Sy --noconfirm \
+RUN sudo -u $NB_USER yaourt -Sy --noconfirm \
             ijavascript && \
     sudo -u $NB_USER ijsinstall
 

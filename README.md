@@ -1,5 +1,17 @@
 # Jupyter Docker Pack
 
-Personally, I run it like:
+Docker image containing a few kernels preinstalled:
 
-    docker run -ti -p 8888:8888 kubuszok/jupyter-pack
+ * Clojure
+ * Haskell
+ * Java
+ * JavaScript
+ * Python 2
+ * Python 3
+ * Scala
+
+(No, it does not contain Spark, Tensorflow and the likes).
+
+You can run it with:
+
+    docker run -ti kubuszok/jupyter-pack
