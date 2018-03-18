@@ -40,7 +40,7 @@ RUN sudo -u $NB_USER yaourt -Sy --noconfirm \
     chown $NB_USER /opt/ihaskell-git -R && \
     cd /opt/ihaskell-git && \
     sudo -u $NB_USER makepkg && \
-    sudo -u $NB_USER /home/$NB_USER/.local/bin/ihaskell --install stack
+    sudo -u $NB_USER /home/$NB_USER/.local/bin/ihaskell install --stack
 
 # Java and Clojure
 RUN sudo -u $NB_USER yaourt -Sy --noconfirm \
@@ -56,9 +56,9 @@ RUN sudo -u $NB_USER yaourt -Sy --noconfirm \
     rm /tmp/clojupyter -rf
 
 # JavaScript
-RUN sudo -u $NB_USER yaourt -Sy --noconfirm \
-            ijavascript && \
-    sudo -u $NB_USER ijsinstall
+RUN cd /home/$NB_USER && \
+    sudo -u $NB_USER yaourt -Sy --noconfirm \
+            ijavascript
 
 # Ruby
 RUN sudo -u $NB_USER yaourt -Sy --noconfirm \
@@ -72,7 +72,7 @@ RUN wget -q -O - https://raw.githubusercontent.com/alexarchambault/jupyter-scala
 RUN rm /tmp/* -rf
 USER jupyter
 WORKDIR /home/$NB_USER
-RUN rm /home/$NB_USER/* -rf
+#RUN rm /home/$NB_USER/* -rf
 
 EXPOSE 8888:8888
-CMD jupyterlab --ip=0.0.0.0
+CMD jupyter-lab --ip=0.0.0.0

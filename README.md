@@ -2,16 +2,17 @@
 
 Docker image containing a few kernels preinstalled:
 
+ * C++
  * Clojure
  * Haskell
- * Java
+ * ~~Java~~
  * JavaScript
  * Python 2
  * Python 3
- * Scala
+ * ~~Scala~~
 
 (No, it does not contain Spark, Tensorflow and the likes).
 
 You can run it with:
 
-    docker run -ti kubuszok/jupyter-pack
+    docker run -ti -p 8888:8888 kubuszok/jupyter-pack
