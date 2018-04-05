@@ -1,0 +1,9 @@
+#!/bin/sh
+if [ ! -z $JAVA ]; then
+  sudo archlinux-java set $JAVA
+fi
+if [ ! -z $LEGACY ]; then
+	jupyter-notebook --ip=0.0.0.0
+else
+  jupyter-lab --ip=0.0.0.0
+fi

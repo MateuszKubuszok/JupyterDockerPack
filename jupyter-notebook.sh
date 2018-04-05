@@ -1,2 +1,2 @@
 #!/bin/bash
-docker run -it -p 8888:8888 kubuszok/jupyter-pack:latest jupyter-notebook --ip=0.0.0.0
+docker run -it -p 8888:8888 -e LEGACY=1 kubuszok/jupyter-pack:local

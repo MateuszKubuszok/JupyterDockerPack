@@ -1,0 +1,2 @@
+#!/bin/bash
+as-user yaourt -Scc --noconfirm && rm -rf /tmp/* $NB_HOME/{.cache,.yarn} $@
