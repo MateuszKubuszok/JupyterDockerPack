@@ -1,5 +1,7 @@
 # Jupyter Docker Pack
 
+![Screenshot](screenshot.png)
+
 Docker image containing a few kernels preinstalled:
 
  * C++
