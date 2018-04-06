@@ -36,3 +36,7 @@ This change is preserved between runs. To restore Java 8 (required by e.g. Scala
 ## Notice
 
 Some kernels (esp. Haskell) might take a while to start the first time you use them.
+
+Image is based on [Antergos](https://hub.docker.com/r/antergos/makepkg/tags/) - Antergos is based
+on Arch and this way I have access to both repositories with lastest versions as well as AURs
+which adds community support for many packages, that I would otherwise had to install manually.
