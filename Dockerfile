@@ -49,17 +49,6 @@ RUN mkdir -p /tmp/ijava && \
     fix-permissions /home/$NB_USER
 
 
-# Javascript
-USER root
-RUN apt-get update && \
-    apt-get install -y -y --no-install-recommends nodejs-legacy npm && \
-    rm -rf /var/lib/apt/lists/* && \
-    npm install -g ijavascript
-
-USER $NB_UID
-RUN ijsinstall
-
-
 # Ruby
 USER root
 RUN apt-get update && \
