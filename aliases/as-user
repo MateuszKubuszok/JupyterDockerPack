@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo -u $NB_USER $@
+chown -R "$NB_USER" "$NB_HOME" && sudo -u $NB_USER $@
