@@ -1,12 +1,11 @@
-# Cling (C++)
+# Install Cling (C++)
 USER $NB_UID
 RUN conda install --quiet --yes xeus-cling -c QuantStack -c conda-forge && \
     conda clean -tipsy && \
     fix-permissions $CONDA_DIR && \
     fix-permissions /home/$NB_USER
 
-
-# Haskell
+# Install Haskell
 USER root
 RUN apt-get update && \
     apt-get install -y -y --no-install-recommends python3-pip git libtinfo-dev libzmq3-dev libcairo2-dev libpango1.0-dev libmagic-dev libblas-dev liblapack-dev && \
@@ -23,8 +22,7 @@ RUN curl -sSL https://get.haskellstack.org/ | sh && \
     rm -rf IHaskell && \
     fix-permissions /home/$NB_USER
 
-
-# Java and Clojure
+# Install Java and Clojure
 USER root
 RUN apt-get update && \
     apt-get install -y -y --no-install-recommends leiningen openjdk-11-jdk unzip && \
@@ -48,8 +46,7 @@ RUN mkdir -p /tmp/ijava && \
     rm -rf /tmp/ijava /tmp/ijava.zip && \
     fix-permissions /home/$NB_USER
 
-
-# Ruby
+# Install Ruby
 USER root
 RUN apt-get update && \
     apt-get install -y -y --no-install-recommends libtool libffi-dev ruby ruby-dev make libzmq3-dev libczmq-dev && \
@@ -59,7 +56,3 @@ RUN apt-get update && \
 USER $NB_UID
 RUN gem install cztop iruby && \
     iruby register --force
-
-
-# ensure user is $NB_UID
-USER $NB_UID
