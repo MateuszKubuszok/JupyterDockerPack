@@ -1,4 +1,4 @@
-#### Fri Jan 11 02:09:17 CET 2019
+#### Fri Jan 11 12:17:46 CET 2019
 
 #### jupyter/all-spark-notebook:latest start
 FROM jupyter/all-spark-notebook:latest
@@ -150,86 +150,107 @@ RUN fix-permissions $CONDA_DIR
 #### https://raw.githubusercontent.com/jupyter/docker-stacks/master/r-notebook/Dockerfile end
 
 #### https://raw.githubusercontent.com/vatlab/SoS/master/development/docker-notebook/Dockerfile start (skip 14 first, 10 last lines)
-USER    root
+USER root
 
 #       Tools
-RUN     apt-get update
-RUN     apt-get install -y graphviz
-RUN     apt-get install -y texlive-xetex texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended
+RUN apt-get update
+RUN apt-get install -y graphviz
+RUN apt-get install -y texlive-xetex texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended
 
-RUN     apt-get install -y octave
-#RUN     octave --eval 'pkg install -forge dataframe'
+RUN apt-get install -y octave
+#RUN octave --eval 'pkg install -forge dataframe'
 
-RUN     apt-get purge --auto-remove nodejs npm node
-RUN     rm -rf ~/.nvm 
-RUN     apt-get install -y nodejs-legacy npm
+RUN apt-get purge --auto-remove nodejs npm
+RUN rm -rf ~/.nvm 
+RUN apt-get install -y nodejs npm
 
-RUN     apt-get install -y libgmp3-dev
-RUN     apt-get install -y software-properties-common
-RUN     add-apt-repository -y ppa:staticfloat/juliareleases
-#RUN     add-apt-repository -y ppa:staticfloat/julia-deps
-RUN     apt-get update
-RUN     apt-get install -y julia
+RUN apt-get install -y libgmp3-dev
+RUN apt-get install -y software-properties-common
+#RUN -apt-repository -y ppa:staticfloat/juliareleases
+#RUN add-apt-repository -y ppa:staticfloat/julia-deps
+RUN apt-get update
+#RUN -get install -y julia
 
 # Install some packages for our examples
-#RUN     R --slave -e 'install.packages(c("package1", "package2"), lib="/usr/local/lib/R/site-library")'
-RUN     R --slave -e 'source("https://bioconductor.org/biocLite.R"); biocLite("biomaRt")'
-RUN     R --slave -e 'install.packages("glmnet", repos="http://cran.us.r-project.org")'
-RUN     pip install sklearn
+#RUN R --slave -e 'install.packages(c("package1", "package2"), lib="/usr/local/lib/R/site-library")'
+RUN R --slave -e 'source("https://bioconductor.org/biocLite.R"); biocLite("biomaRt")'
+RUN R --slave -e 'install.packages("glmnet", repos="http://cran.us.r-project.org")'
+#RUN pip install --no-cache-dir sklearn
 
-USER    jovyan
+RUN fix-permissions $CONDA_DIR
+RUN fix-permissions /home/$NB_USER
+USER $NB_UID
 
 #       Bash
-RUN     pip install bash_kernel
-RUN     python -m bash_kernel.install --user
+RUN pip install --no-cache-dir bash_kernel
+RUN python -m bash_kernel.install --user
+USER root
+RUN fix-permissions /home/$NB_USER
+USER $NB_UID
 
 #       Octave
-RUN     pip install octave_kernel
-RUN     python -m octave_kernel install --user
+RUN pip install --no-cache-dir octave_kernel
+RUN python -m octave_kernel install --user
+USER root
+RUN fix-permissions /home/$NB_USER
+USER $NB_UID
 
 #       JavaScript
-RUN     npm rebuild
-RUN     npm install -g ijavascript
-RUN     ijsinstall --spec-path=full
+RUN npm rebuild
+RUN npm install -g ijavascript
+RUN ijsinstall --spec-path=full
 
 #       SPARQL kernel for testing
-RUN     cd /tmp && git clone https://github.com/asanchez75/sparql-kernel.git && cd /tmp/sparql-kernel && python setup.py install
-RUN     jupyter sparqlkernel install --user
+RUN cd /tmp && git clone https://github.com/asanchez75/sparql-kernel.git && cd /tmp/sparql-kernel && python setup.py install
+RUN jupyter sparqlkernel install --user
 
 #        Julia
-RUN     julia -e "ENV[\"JUPYTER\"]=\"$(which jupyter)\";Pkg.add(\"IJulia\")"
-RUN     julia -e 'Pkg.add("Feather")'
-RUN     julia -e 'Pkg.add("DataFrames")'
-RUN     julia -e 'Pkg.add("NamedArrays")'
+#RUN julia -e "ENV[\"JUPYTER\"]=\"$(which jupyter)\";Pkg.add(\"IJulia\")"
+#RUN julia -e 'Pkg.add("Feather")'
+#RUN julia -e 'Pkg.add("DataFrames")'
+#RUN julia -e 'Pkg.add("NamedArrays")'
 
 #       Python 2
-RUN     conda create -n ipykernel_py2 python=2 ipykernel
-RUN     /bin/bash -c "source activate ipykernel_py2; python -m ipykernel install --user; source deactivate"
+RUN conda create -n ipykernel_py2 python=2 ipykernel
+RUN /bin/bash -c "source activate ipykernel_py2; python -m ipykernel install --user; source deactivate"
+USER root
+RUN fix-permissions /home/$NB_USER
+USER $NB_UID
 
 #       Markdown kernel
-RUN     pip install markdown-kernel
-RUN     python -m markdown_kernel.install
+RUN pip install --no-cache-dir markdown-kernel
+RUN python -m markdown_kernel.install
+USER root
+RUN fix-permissions /home/$NB_USER
+USER $NB_UID
 
 # Bioinfo
-RUN     pip install pysam
+RUN pip install --no-cache-dir pysam
 
 # for testing
-RUN     pip install xlsx2csv bs4
+RUN pip install --no-cache-dir xlsx2csv bs4
 
 # SOS
-RUN     pip install pip --upgrade
-RUN     pip install xlrd docker
-RUN     pip install markdown wand graphviz imageio pillow 
+RUN pip install --no-cache-dir pip --upgrade
+RUN pip install --no-cache-dir xlrd docker
+RUN pip install --no-cache-dir markdown wand graphviz imageio pillow 
 
 
-RUN     conda install -y feather-format -c conda-forge
-RUN     pip install nbformat --upgrade
+USER root
+RUN fix-permissions $CONDA_DIR
+RUN fix-permissions /home/$NB_USER
+USER $NB_USER
+RUN conda install -y feather-format -c conda-forge
+RUN pip install --no-cache-dir nbformat --upgrade
 ## trigger rerun for sos updates
 ARG	    DUMMY=unknown
-RUN     DUMMY=${DUMMY} pip install sos sos-notebook sos-r sos-julia sos-python sos-matlab sos-javascript sos-bash sos-bioinfo --upgrade
-RUN     python -m sos_notebook.install
-RUN     pip install jupyterlab
-RUN     jupyter labextension install jupyterlab-sos
+RUN DUMMY=${DUMMY} pip install --no-cache-dir sos sos-notebook sos-r sos-julia sos-python sos-matlab sos-javascript sos-bash sos-bioinfo --upgrade
+RUN python -m sos_notebook.install
+USER root
+RUN fix-permissions /home/$NB_USER
+USER $NB_UID
+RUN pip install --no-cache-dir jupyterlab
+RUN jupyter labextension install jupyterlab-sos
 
 #### https://raw.githubusercontent.com/vatlab/SoS/master/development/docker-notebook/Dockerfile end
 
