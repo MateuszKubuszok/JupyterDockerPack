@@ -9,11 +9,11 @@ Combination of a `Dockerfile`s of official Jupyter images and SoS image with ext
  * [jupyter/tensorflow-notebook](https://github.com/jupyter/docker-stacks/blob/master/tensorflow-notebook) `Dockerfile` content appended (Tensorflow libraries)
  * [jupyter/r-notebook](https://github.com/jupyter/docker-stacks/blob/master/r-notebook) `Dockerfile` content appended (R libraries)
  * [vatlab/SoS docker-notebook](https://github.com/vatlab/SoS/blob/master/development/docker-notebook) `Dockerfile` content appended (SoS, Bash, JavaScript)
- * [xeus-cling]() kernel installed (C++)
- * [ihaskell]() kernel installed (Haskell)
- * [ijava]() kernel installed (Java)
- * [clojupyter]() kernel installed (Clojure)
- * [iruby]() kernel installed (Ruby)
+ * [xeus-cling](https://github.com/QuantStack/xeus-cling) kernel installed (C++)
+ * [ihaskell](https://github.com/gibiansky/IHaskell) kernel installed (Haskell)
+ * [ijava](https://github.com/SpencerPark/IJava/) kernel installed (Java)
+ * [clojupyter](https://github.com/clojupyter/clojupyter) kernel installed (Clojure)
+ * [iruby](https://github.com/SciRuby/iruby) kernel installed (Ruby)
 
 ## Usage
 
@@ -21,3 +21,7 @@ Since it is derived from `jupyter/all-spark-notebook` [all instructions relevant
 The only change would be image name (`kubuszok/jupyter-pack`).
 
     docker run --rm -p 8888:8888 -e JUPYTER_ENABLE_LAB=yes -v "$PWD":/home/jovyan/work kubuszok/jupyter-pack
+
+Some kernels do not work with jupyterlab and require jupyter notebook.
+
+    docker run --rm -p 8888:8888 -v "$PWD":/home/jovyan/work kubuszok/jupyter-pack

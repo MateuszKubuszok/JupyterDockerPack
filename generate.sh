@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -Eeo pipefail
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 WORKDIR="$DIR/out"
 TEMPLATE="$WORKDIR/Dockerfile"
@@ -10,7 +12,7 @@ rm    -rf "$TEMPLATE"
 touch     "$TEMPLATE"
 
 # utils
-add-text() { echo $1 >> "$TEMPLATE"; }
+add-text() { echo "$1" >> "$TEMPLATE"; }
 add-curl() {
   URL="https://raw.githubusercontent.com/$1/Dockerfile"
   add-text "#### $URL start (skip $2 first, $3 last lines)"
@@ -33,7 +35,7 @@ fix-file() {
 }
 
 # create Dockerfile aggregating our changes and jupyter official recipies
-add-text "#### $(LC_ALL=en_DB.utf8 date)"
+add-text "#### Generated at $(LC_ALL=en_DB.utf8 date)"
 add-text
 add-from 'jupyter/all-spark-notebook:latest'
 add-text
@@ -68,8 +70,13 @@ fix-file 'RUN pip install sklearn' '#RUN pip install sklearn'
 fix-file 'pip install' 'pip install --no-cache-dir'
 fix-file 'RUN julia -e "ENV' '#RUN julia -e "ENV'
 fix-file "RUN julia -e 'Pkg" "#RUN julia -e 'Pkg"
+# remove useless args
+fix-file 'DUMMY=\$\{DUMMY\} pip' 'pip'
 
 # TODO
+# ls -la $HOME/.local/share/jupyter/*
 # mv $HOME/.local/share/jupyter/kernels/julia* $CONDA_DIR/share/jupyter/kernels/ && \
 #     chmod -R go+rx $CONDA_DIR/share/jupyter && \
 #     rm -rf $HOME/.local
+# same with css
+
